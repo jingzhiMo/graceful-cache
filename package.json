@@ -3,19 +3,21 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "lint": "tslint -p tsconfig.json -c tslint.json",
-    "watch": "npm-watch"
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules/*"
+    ],
+    "delay": "2500"
   },
-  "watch": {
-    "lint": "src/index.ts"
+  "scripts": {
+    "lint": "tslint -p tsconfig.json -c tslint.json"
   },
   "keywords": [],
   "author": "mojingzhi",
   "license": "MIT",
   "devDependencies": {
     "cz-conventional-changelog": "3.0.2",
-    "npm-watch": "^0.6.0",
+    "nodemon": "^1.19.2",
     "tslint": "^5.19.0",
     "typescript": "^3.6.2"
   },
