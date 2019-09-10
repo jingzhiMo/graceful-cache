@@ -7,6 +7,6 @@ interface IAlgorithm {
   storage: storageName
 }
 
-export default function initCache(algorithmOption: IAlgorithmOption) {
+export default function initCache(algorithmOption: IAlgorithm) {
   // initCache({ name: 'LRU', capacity: 10, storage: 'sessionStorage' })
 }
