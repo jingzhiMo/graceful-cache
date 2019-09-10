@@ -10,7 +10,8 @@
     "delay": "2500"
   },
   "scripts": {
-    "lint": "tslint -p tsconfig.json -c tslint.json"
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "watch": "npx nodemon --exec 'yarn run lint' -e 'ts'"
   },
   "keywords": [],
   "author": "mojingzhi",
