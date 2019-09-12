@@ -3,7 +3,7 @@
     "target": "es5",
     "module": "commonjs",
     "declaration": true,
-    "declarationDir": "./typing",
+    "declarationDir": "./types",
     "outDir": "./dist",
     "strict": true
   },
