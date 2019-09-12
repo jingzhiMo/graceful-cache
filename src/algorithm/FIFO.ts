@@ -1,10 +1,11 @@
 import { DNode, IDNode } from '../DNode'
+import { nullValue } from '../util/null-value'
 
 interface IMap {
   [key: string]: DNode
 }
 
-export default class FIFO {
+export default class FIFOCache {
   private cache: IMap
   private head: DNode | null
   private tail: DNode | null
@@ -21,7 +22,7 @@ export default class FIFO {
 
   public get(key: string): any {
     if (!this.cache.hasOwnProperty(key)) {
-      return -1
+      return nullValue
     }
 
     return this.cache[key].value
