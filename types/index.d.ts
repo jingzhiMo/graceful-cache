@@ -16,7 +16,7 @@ export default class Cache {
      *
      *  @return {Promise}
      */
-    get(key: string, fn: Function): Promise<any>;
+    get(key: string, fn: Function | null): Promise<any>;
     put(key: string, value: any): void;
 }
 export {};

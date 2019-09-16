@@ -34,8 +34,9 @@ export default class Cache {
    *
    *  @return {Promise}
    */
-  public async get(key: string, fn: Function): Promise<any> {
+  public async get(key: string, fn: Function | null): Promise<any> {
     let value: any = this.cache.get(key)
+    fn = fn || (() => {})
 
     if (value !== nullValue) {
       return value
@@ -45,16 +46,27 @@ export default class Cache {
     value = getItem(this.algorithmOption.storage, key)
 
     if (value !== nullValue) {
+      this.cache.put(key, value)
       return value
     }
 
     // storage 没取到，通过用户提供方法获取
+    // 若用户方法没有提供，则为undefined
     value = await fn()
-    this.cache.put(key, value)
-    setItem(this.algorithmOption.storage, key, value)
+
+    if (value !== undefined) {
+      this.cache.put(key, value)
+      setItem(this.algorithmOption.storage, key, value)
+    }
+
+    return value
   }
 
   public put(key: string, value: any): void {
+    if (value === undefined) {
+      return
+    }
+
     this.cache.put(key, value)
     setItem(this.algorithmOption.storage, key, value)
   }
