@@ -1,7 +1,7 @@
 import FIFOCache from './algorithm/FIFO'
 import LRUCache from './algorithm/LRU'
 import { nullValue } from './util/null-value'
-import { storageName, getItem, setItem, initStorageKey } from './util/storage'
+import { storageName, getItem, setItem, clearItem, initStorageKey } from './util/storage'
 
 type algorithmName = 'FIFO' | 'LRU'
 
@@ -11,7 +11,7 @@ interface IAlgorithm {
   storage: storageName
 }
 
-export default class Cache {
+export class GCache {
   private algorithmOption: IAlgorithm
   private cache: FIFOCache | LRUCache
 
@@ -30,12 +30,13 @@ export default class Cache {
   /**
    *  @desc  获取缓存中的值
    *  @param  {String}  key  缓存中的key值
-   *  @param  {Function}  fn  当从缓存和storage中无法获取的时候的调用函数
+   *  @param  {Function | null}  fn  当从缓存和storage中无法获取的时候的调用函数
    *
    *  @return {Promise}
    */
-  public async get(key: string, fn: Function | null): Promise<any> {
+  public async get(key: string, fn?: Function): Promise<any> {
     let value: any = this.cache.get(key)
+
     fn = fn || (() => {})
 
     if (value !== nullValue) {
@@ -71,3 +72,5 @@ export default class Cache {
     setItem(this.algorithmOption.storage, key, value)
   }
 }
+
+export const clearStorage = clearItem

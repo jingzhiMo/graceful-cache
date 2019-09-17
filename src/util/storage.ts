@@ -8,6 +8,7 @@ let storageKey: Set<string>
 
 /**
  *  @desc storage 获取数据封装getItem
+ *  @param  {storageName} storage  选用sessionStorage或者localStorage
  *  @param  {String}  key  获取数据的key值
  *
  *  @return  null或JSON.parse后的数据
@@ -24,7 +25,9 @@ export function getItem(storage: storageName, key: string): any {
 
 /**
  *  @desc storage 写入数据封装 setItem
+ *  @param  {storageName} storage  选用sessionStorage或者localStorage
  *  @param  {String}  key  写入到storage的key值
+ *  @param  {any}  value  storage的值
  */
 export function setItem(storage: storageName, key: string, value: any): void {
   const newKey: string = prefix + key
@@ -38,6 +41,22 @@ export function setItem(storage: storageName, key: string, value: any): void {
   }
 
   window[storage].setItem(newKey, JSON.stringify(value))
+}
+
+/**
+ *  @desc  根据当前storageKey，删除 storage 的数据
+ *  @param  {storageName} storage  选用sessionStorage或者localStorage
+ */
+export function clearItem(storage: storageName): void {
+  let key: string
+
+  initStorageKey(storage)
+
+  for (key of storageKey) {
+    window[storage].removeItem(key)
+  }
+
+  window[storage].removeItem(storageKeyListName)
 }
 
 /**
