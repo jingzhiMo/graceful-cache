@@ -5,7 +5,7 @@ interface IAlgorithm {
     capacity: number;
     storage: storageName;
 }
-export declare class GCache {
+export declare class MCache {
     private algorithmOption;
     private cache;
     constructor(algorithmOption: IAlgorithm);

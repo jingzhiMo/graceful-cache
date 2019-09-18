@@ -11,7 +11,7 @@ interface IAlgorithm {
   storage: storageName
 }
 
-export class GCache {
+export class MCache {
   private algorithmOption: IAlgorithm
   private cache: FIFOCache | LRUCache
 
