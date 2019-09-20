@@ -15,7 +15,16 @@
     "watch": "npx nodemon --exec 'yarn run lint' -e 'ts'",
     "build": "tsc --build tsconfig.json"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:jingzhiMo/msn-cache.git"
+  },
+  "keywords": [
+    "cache",
+    "lru",
+    "fifo",
+    "storage"
+  ],
   "author": "mojingzhi",
   "license": "MIT",
   "devDependencies": {
