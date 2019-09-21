@@ -37,7 +37,7 @@ export class MCache {
   public async get(key: string, fn?: Function): Promise<any> {
     let value: any = this.cache.get(key)
 
-    fn = fn || (() => {})
+    fn = fn || (() => ({}))
 
     if (value !== nullValue) {
       return value
@@ -53,7 +53,11 @@ export class MCache {
 
     // storage 没取到，通过用户提供方法获取
     // 若用户方法没有提供，则为undefined
-    value = await fn()
+    try {
+      value = await fn()
+    } catch (e) {
+      throw new Error('excute request function error' + e)
+    }
 
     if (value !== undefined) {
       this.cache.put(key, value)
