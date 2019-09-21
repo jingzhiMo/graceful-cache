@@ -84,6 +84,7 @@ const mc = new MCache({
   清除选中的storage的存储数据
 * 参数
   * `{String} storage` 清除的storage类型
+  * `{Array<string>} keyList`  指定清除storage的key值（可选）
 * 返回值：void
 * 用法
 
@@ -92,6 +93,7 @@ import { clearStorage } from 'msn-cache'
 
 // clear existed storage data
 clearStorage('sessionStorage')
+clearStorage('localStorage', ['foo', 'bar'])
 
 const mc = new MCache(/* ... */)
 ```

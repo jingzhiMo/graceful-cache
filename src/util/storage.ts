@@ -46,17 +46,33 @@ export function setItem(storage: storageName, key: string, value: any): void {
 /**
  *  @desc  根据当前storageKey，删除 storage 的数据
  *  @param  {storageName} storage  选用sessionStorage或者localStorage
+ *  @param  {Array<string>} keyList 删除指定的key值数据
  */
-export function clearItem(storage: storageName): void {
+export function clearItem(storage: storageName, keyList?: Array<string>): void {
   let key: string
 
   initStorageKey(storage)
 
+  // 指定删除key值
+  if (keyList) {
+    for (key of keyList) {
+      key = prefix + key
+      if (storageKey.delete(key)) {
+        window[storage].removeItem(key)
+      }
+    }
+
+    window[storage].setItem(storageKeyListName, JSON.stringify(Array.from(storageKey)))
+    return
+  }
+
+  // 删除全部key值
   for (key of storageKey) {
     window[storage].removeItem(key)
   }
 
   window[storage].removeItem(storageKeyListName)
+  storageKey = new Set([])
 }
 
 /**

@@ -17,8 +17,9 @@ export declare function setItem(storage: storageName, key: string, value: any): 
 /**
  *  @desc  根据当前storageKey，删除 storage 的数据
  *  @param  {storageName} storage  选用sessionStorage或者localStorage
+ *  @param  {Array<string>} keyList 删除指定的key值数据
  */
-export declare function clearItem(storage: storageName): void;
+export declare function clearItem(storage: storageName, keyList?: Array<string>): void;
 /**
  *  @desc  初始化 storage列表
  */
