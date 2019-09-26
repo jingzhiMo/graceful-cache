@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "baseUrl": "node_modules",
+    "lib": ["es2015", "DOM", "ScriptHost"]
+  }
+}
