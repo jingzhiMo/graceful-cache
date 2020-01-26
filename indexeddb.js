@@ -13,6 +13,7 @@ req.onupgradeneeded = event => {
     personStore = db.createObjectStore('person', {
       keyPath: 'id'
     })
+    personStore.createIndex('id', 'id', { unique: true })
   }
 }
 
@@ -74,3 +75,28 @@ function remove(query) {
     console.log('删除失败 error', event)
   }
 }
+
+function readRange() {
+  var store = db.transaction(['person'], 'readwrite').objectStore('person')
+  var index = store.index('id')
+  var range = IDBKeyRange.bound(1, 4, false, false)
+
+  index.openCursor(range).onsuccess = event => {
+    var cursor = event.target.result
+
+    if (cursor) {
+      console.log('cursor', cursor.value)
+      // if (cursor.value.id % 2) {
+      //   console.log('delete value', cursor.value)
+      //   cursor.delete()
+      // }
+      cursor.continue()
+    }
+  }
+}
+
+put({ id: 1, name: 'person-1' })
+put({ id: 2, name: 'person-2' })
+put({ id: 3, name: 'person-3' })
+put({ id: 4, name: 'person-4' })
+put({ id: 5, name: 'person-5' })
