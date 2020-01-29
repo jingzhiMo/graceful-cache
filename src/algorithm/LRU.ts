@@ -120,6 +120,7 @@ export default class LRUCache {
     }
 
     this.tail = this.tail!.prev
+    this.tail!.next = null
     this.cache[key] = node
   }
 }
