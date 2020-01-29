@@ -29,7 +29,10 @@ export class IndexedDB {
     let self = this
 
     return new Promise((resolve, reject) => {
-      if (this.inited) return this.db
+      if (this.inited) {
+        resolve(this.db)
+        return
+      }
 
       const request: IDBOpenDBRequest = indexedDB.open(DB_NAME, DB_VERSION)
 
@@ -47,6 +50,7 @@ export class IndexedDB {
       request.onsuccess = (event: any) => {
         self.db = event.target.result
         self.inited = true
+        resolve(self.db)
       }
       request.onerror = event => {
         reject(event)
@@ -57,7 +61,7 @@ export class IndexedDB {
   read(id: string): Promise<AddData | undefined> {
     if (!this.db) throw new Error('need to execute "init" method')
 
-    const request = this.db.transaction([STORE_NAME], 'readonly')
+    const request = this.db.transaction([STORE_NAME])
       .objectStore(STORE_NAME)
       .get(id)
 
