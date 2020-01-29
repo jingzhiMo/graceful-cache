@@ -6,6 +6,7 @@ import {
 } from './util/indexedDB'
 
 type algorithmName = 'FIFO' | 'LRU'
+type expiredType = number | Date
 // 默认的过期时间，30分钟
 let DEFAULT_EXPIRED = 30 * 60 * 1000
 
@@ -18,7 +19,7 @@ interface IAlgorithm {
  * @description 根据绝对日期或相对时间生成最终的时间戳
  * @param {number | Date} expired 可以指定相对时间，相对时间最小为0；可以设定绝对时间
  */
-function generateTimestamp(expired?: number | Date): number {
+function generateTimestamp(expired?: expiredType): number {
   let timestamp
 
   if (expired instanceof Date) {
@@ -36,9 +37,9 @@ export class MCache {
   private algorithmOption: IAlgorithm
   private cache: FIFOCache | LRUCache
   private dbInstance: IndexedDB
-  private expired: number
+  private expired: expiredType
 
-  constructor(algorithmOption: IAlgorithm, expired?: number) {
+  constructor(algorithmOption: IAlgorithm, expired?: expiredType) {
     const SelectCache = {
       FIFO: FIFOCache,
       LRU: LRUCache,
@@ -55,10 +56,11 @@ export class MCache {
    *  @desc  获取缓存中的值
    *  @param  {String}  key  缓存中的key值
    *  @param  {Function | null}  fn  当从缓存和indexedDB中无法获取的时候的调用函数
+   *  @param  {expiredType}  expired  对该特定key值设置过期时间
    *
    *  @return {Promise}
    */
-  public async get(key: string, fn?: Function): Promise<any> {
+  public async get(key: string, fn?: Function, expired?: expiredType): Promise<any> {
     let value: any = this.cache.get(key)
 
     fn = fn || (() => nullValue)
@@ -95,7 +97,7 @@ export class MCache {
       this.dbInstance.add({
         id: key,
         value,
-        timestamp: generateTimestamp(this.expired)
+        timestamp: generateTimestamp(expired || this.expired)
       })
     }
 
@@ -106,9 +108,9 @@ export class MCache {
    *
    * @param {string} key 加入到cache的key值
    * @param {any} value cache的value值
-   * @param {number | Date} expired 可以指定相对时间，相对时间最小为0；可以设定绝对时间
+   * @param {expiredType} expired 可以指定相对时间，相对时间最小为0；可以设定绝对时间
    */
-  public async put(key: string, value: any, expired?: number | Date): Promise<void> {
+  public async put(key: string, value: any, expired?: expiredType): Promise<void> {
     // 触发删除过期数据
     this.dbInstance.deleteByTimestamp(Date.now())
     if (value === undefined) {
