@@ -23,7 +23,7 @@ function generateTimestamp(expired?: number | Date): number {
 
   if (expired instanceof Date) {
     timestamp = +expired
-  } else if (typeof expired === 'number' && expired >= 0) {
+  } else if (typeof expired === 'number' && expired > 0) {
     timestamp = Date.now() + expired
   } else {
     timestamp = Date.now() + DEFAULT_EXPIRED
@@ -38,7 +38,7 @@ export class MCache {
   private dbInstance: IndexedDB
   private expired: number
 
-  constructor(algorithmOption: IAlgorithm, expired: number) {
+  constructor(algorithmOption: IAlgorithm, expired?: number) {
     const SelectCache = {
       FIFO: FIFOCache,
       LRU: LRUCache,
@@ -47,9 +47,8 @@ export class MCache {
     this.algorithmOption = algorithmOption
     this.cache = new SelectCache(algorithmOption.capacity)
     // 默认过期时间为30分钟后
-    this.expired = expired
+    this.expired = expired || 0
     this.dbInstance = new IndexedDB()
-    this.dbInstance.init()
   }
 
   /**
@@ -62,7 +61,7 @@ export class MCache {
   public async get(key: string, fn?: Function): Promise<any> {
     let value: any = this.cache.get(key)
 
-    fn = fn || (() => ({}))
+    fn = fn || (() => nullValue)
     // 异步触发删除过期数据
     this.dbInstance.deleteByTimestamp(Date.now())
 
@@ -75,6 +74,7 @@ export class MCache {
 
     if (result) {
       if (result.timestamp > Date.now()) {
+        this.cache.put(key, result.value)
         return result.value
       } else {
         // 删除过期数据
@@ -108,7 +108,9 @@ export class MCache {
    * @param {any} value cache的value值
    * @param {number | Date} expired 可以指定相对时间，相对时间最小为0；可以设定绝对时间
    */
-  public async put(key: string, value: any, expired?: number | Date): void {
+  public async put(key: string, value: any, expired?: number | Date): Promise<void> {
+    // 触发删除过期数据
+    this.dbInstance.deleteByTimestamp(Date.now())
     if (value === undefined) {
       return
     }
@@ -123,14 +125,41 @@ export class MCache {
         value,
         timestamp: generateTimestamp(expired || this.expired)
       })
-    } else {
-      await this.dbInstance.put({
-        id: key,
-        value
-      })
+      return
     }
 
-    // 触发删除过期数据
-    this.dbInstance.deleteByTimestamp(Date.now())
+    // 显式设置过期时间，则这次更新过期时间
+    if (expired && expired > 0) {
+      await this.dbInstance.put({
+        id: key,
+        value,
+        timestamp: generateTimestamp(expired)
+      })
+      return
+    }
+
+    // 数据已过期，则重新写入时间
+    if (result.timestamp <= Date.now()) {
+      await this.dbInstance.put({
+        id: key,
+        value,
+        timestamp: generateTimestamp(this.expired)
+      })
+      return
+    }
+
+    // 数据没过期，不需要更新时间
+    await this.dbInstance.put({
+      id: key,
+      value,
+      timestamp: result.timestamp
+    })
+  },
+
+  /**
+   * @description 初始化 indexedDB 连接
+   */
+  public init() {
+    return this.dbInstance.init()
   }
 }

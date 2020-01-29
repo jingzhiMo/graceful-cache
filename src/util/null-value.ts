@@ -1,1 +1,1 @@
-export const nullValue = Symbol('null')
+export const nullValue = null
