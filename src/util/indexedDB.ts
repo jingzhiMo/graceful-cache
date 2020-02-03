@@ -19,15 +19,23 @@ export interface UpdateData {
 export class IndexedDB {
   db: IDBDatabase | null
   inited: boolean
+  support: boolean
 
   constructor() {
     this.db = null
     this.inited = false
+    this.support = false
   }
 
   init() {
     let self = this
 
+    if (!window.indexedDB) {
+      self.inited = true
+      return Promise.resolve()
+    }
+
+    this.support = true
     return new Promise((resolve, reject) => {
       if (this.inited) {
         resolve(this.db)
@@ -59,7 +67,8 @@ export class IndexedDB {
   }
 
   read(id: string): Promise<AddData | undefined> {
-    if (!this.db) throw new Error('need to execute "init" method')
+    if (!this.inited) throw new Error('need to execute "init" method')
+    if (!this.support || !this.db) return Promise.resolve(undefined)
 
     const request = this.db.transaction([STORE_NAME])
       .objectStore(STORE_NAME)
@@ -76,7 +85,8 @@ export class IndexedDB {
   }
 
   add(data: AddData) {
-    if (!this.db) throw new Error('need to execute "init" method')
+    if (!this.inited) throw new Error('need to execute "init" method')
+    if (!this.support || !this.db) return
 
     const request = this.db.transaction([STORE_NAME], 'readwrite')
       .objectStore(STORE_NAME)
@@ -89,7 +99,8 @@ export class IndexedDB {
   }
 
   put(data: UpdateData) {
-    if (!this.db) throw new Error('need to execute "init" method')
+    if (!this.inited) throw new Error('need to execute "init" method')
+    if (!this.support || !this.db) return
 
     const request = this.db.transaction([STORE_NAME], 'readwrite')
       .objectStore(STORE_NAME)
@@ -102,7 +113,8 @@ export class IndexedDB {
   }
 
   remove(id: string) {
-    if (!this.db) throw new Error('need to execute "init" method')
+    if (!this.inited) throw new Error('need to execute "init" method')
+    if (!this.support || !this.db) return
 
     const request = this.db.transaction([STORE_NAME], 'readwrite')
       .objectStore(STORE_NAME)
@@ -115,7 +127,9 @@ export class IndexedDB {
   }
 
   deleteByTimestamp(maxTimestamp:  number) {
-    if (!this.db) throw new Error('need to execute "init" method')
+    if (!this.inited) throw new Error('need to execute "init" method')
+    if (!this.support || !this.db) return
+
 
     const index = this.db.transaction([STORE_NAME], 'readwrite')
       .objectStore(STORE_NAME)

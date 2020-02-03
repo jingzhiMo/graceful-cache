@@ -71,16 +71,18 @@ export class MCache {
       return value
     }
 
-    // 尝试到 indexedDB 取值
-    const result = await this.dbInstance.read(key)
+    if (this.dbInstance.support) {
+      // 尝试到 indexedDB 取值
+      const result = await this.dbInstance.read(key)
 
-    if (result) {
-      if (result.timestamp > Date.now()) {
-        this.cache.put(key, result.value)
-        return result.value
-      } else {
-        // 删除过期数据
-        await this.dbInstance.remove(key)
+      if (result) {
+        if (result.timestamp > Date.now()) {
+          this.cache.put(key, result.value)
+          return result.value
+        } else {
+          // 删除过期数据
+          await this.dbInstance.remove(key)
+        }
       }
     }
 
