@@ -3,26 +3,11 @@
 
 `msn`分别是`memory`, `storage`, `network`的首字母。
 
-*从v2.0.0开始，`storage`改成`indexedDB`*
+*从v1.0.0开始，`storage`改成`indexedDB`，而仓库的名称还是保持原有*
 
 这是一个用于处理缓存的工具，针对`memory` => `indexedDB` => `network` 逐级递减来获取缓存，优先从`memory`提取数据，若不存在则通过`indexedDB`获取，若还是存在，则发出请求获取数据；其中对`memory`的处理算法规则，使用`LRU`、`FIFO`算法来处理（后续会添加`LFU`算法），避免过度占用内存。
 
-
-Table of Contents
-=================
-
-* [msn-cache](#msn-cache)
-  * [Background](#background)
-  * [Install](#install)
-  * [Usage](#usage)
-  * [API](#api)
-     * [Global method](#global-method)
-        * [MCache](#mcache)
-        * [clearStorage](#clearstorage)
-     * [Instance Method](#instance-method)
-        * [get](#get)
-        * [put](#put)
-  * [License](#license)
+*PS: 若当前环境不支持`indexedDB`，则该工具自动跳过`indexedDB`层面，保留`memory => network`寻找链条。`memory`找不到则通过`network`获取数据。*
 
 ## Background
 
@@ -80,26 +65,6 @@ const mc = new MCache(
   },
   expired: 60 * 60 * 1000 // 设置 indexedDB过期时间为一个小时
 )
-```
-
-#### clearStorage
-
-* 描述
-  **（已废弃）**清除选中的storage的存储数据
-* 参数
-  * `{String} storage` 清除的storage类型
-  * `{Array<string>} keyList`  指定清除storage的key值（可选）
-* 返回值：void
-* 用法
-
-```js
-import { clearStorage } from 'msn-cache'
-
-// clear existed storage data
-clearStorage('sessionStorage')
-clearStorage('localStorage', ['foo', 'bar'])
-
-const mc = new MCache(/* ... */)
 ```
 
 ### Instance Method
