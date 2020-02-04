@@ -158,7 +158,7 @@ export class MCache {
       value,
       timestamp: result.timestamp
     })
-  },
+  }
 
   /**
    * @description 初始化 indexedDB 连接
