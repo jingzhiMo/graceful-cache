@@ -1,1 +1,1 @@
-export declare const nullValue: unique symbol;
+export declare const nullValue: null;
