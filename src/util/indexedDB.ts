@@ -1,5 +1,3 @@
-import { nullValue } from './null-value'
-
 const DB_NAME = 'MSN_CACHE'
 const DB_VERSION = 1
 const STORE_NAME = 'MSN_TABLE'
