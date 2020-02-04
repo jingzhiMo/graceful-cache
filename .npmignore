@@ -1,5 +1,6 @@
 node_modules
 src
+example
 .gitignore
 .editorconfig
 yarn.lock
