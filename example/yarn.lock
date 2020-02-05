@@ -3230,10 +3230,10 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-msn-cache@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/msn-cache/-/msn-cache-0.1.3.tgz#faac8820922d5549e6d5de825b65974f4ece5ac3"
-  integrity sha512-PVvzs3U/5x+Eo5FOyiDb6lXL/FrvUjQhcbUR9LE3TomluIRofL5+L/618VVVjxHZeSURUbZGkL3gIs3uKzh7iA==
+msn-cache@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/msn-cache/-/msn-cache-1.0.0.tgz#fe121a35d4ea64fefdbfb315d380a3166b505918"
+  integrity sha512-cH9+JgKaF0ZubK7FiMwVa4oK6Hl+uQ56sznSRWUJ3FSV/cTQN3QP+TzIg/gNrHpZ2XRO38/4BuY1L5C9YOG45Q==
 
 nan@^2.12.1:
   version "2.14.0"
